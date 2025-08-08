@@ -16,9 +16,11 @@ public class UserDetailsServiceConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        UserDetails userDetails = User.builder().username("salesPerson1")
-                .password(passwordEncoder().encode("salesPerson1Password"))
-                .roles("SALES_PERSON").build();
+        UserDetails userDetails = User.builder()
+                .username("john@doe.com").password(passwordEncoder().encode("john-doe")).roles("SALES_PERSON")
+                .username("jane@doe.com").password(passwordEncoder().encode("jane-doe")).roles("SALES_PERSON")
+                .username("michael@schumacher.com").password(passwordEncoder().encode("michael-schumacher")).roles("F1_DRIVER")
+                .build();
 
         return new InMemoryUserDetailsManager(userDetails);
 

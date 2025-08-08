@@ -1,10 +1,13 @@
 package com.ecommercepurchase.service;
 
 import com.ecommercepurchase.entities.Product;
+import com.ecommercepurchase.record.ProductRequest;
 import com.ecommercepurchase.record.ProductResponse;
 import com.ecommercepurchase.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -24,6 +27,16 @@ public class ProductService {
     public List<ProductResponse> getAllProductsInProductResponseType() {
         List<Product> allProducts = productRepository.findAll();
         return convertProductList(allProducts);
+    }
+
+    @Caching(evict = {@CacheEvict(value = "AllProductsInProductResponseType", allEntries = true)})
+    public ProductResponse addProduct(ProductRequest productRequest) {
+        Product product = new Product();
+        product.setProductName(productRequest.productName());
+
+        Product savedProduct = productRepository.save(product);
+
+        return new ProductResponse(savedProduct.getId(), productRequest.productName());
     }
 
     private List<ProductResponse> convertProductList(List<Product> productList) {

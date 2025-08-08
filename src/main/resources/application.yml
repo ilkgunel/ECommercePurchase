@@ -22,8 +22,6 @@ spring:
 cache:
   config:
     entryTtl: 60
-    countryNames:
-      entryTtl: 30
 server:
   port: 8080
 com:
