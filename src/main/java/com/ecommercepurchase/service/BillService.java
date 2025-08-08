@@ -1,50 +1,67 @@
 package com.ecommercepurchase.service;
 
+import com.ecommercepurchase.entities.SalesPerson;
+import com.ecommercepurchase.exception.UnacceptableBillException;
+import com.ecommercepurchase.record.BillRequest;
 import com.ecommercepurchase.record.BillResponse;
 import com.ecommercepurchase.entities.Bill;
 import com.ecommercepurchase.repository.BillRepository;
+import com.ecommercepurchase.repository.SalesPersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Service
 public class BillService {
 
     private final BillRepository billRepository;
+    private final SalesPersonRepository salesPersonRepository;
+
+    private final String ACCEPTED = "ONAYLANDI";
+    private final String ACCEPTED_RESULT_MESSAGE = "Fatura Kabul Edildi";
+
 
     @Value("${com.ecommercepurchase.limit}")
     private int salesPersonLimit;
 
     @Autowired
-    public BillService(BillRepository billRepository) {
+    public BillService(BillRepository billRepository, SalesPersonRepository salesPersonRepository) {
         this.billRepository = billRepository;
+        this.salesPersonRepository = salesPersonRepository;
     }
 
-    public BillResponse addBill(Bill bill) {
-        String resultMessage = "";
-        String status;
+    public BillResponse addBill(BillRequest billRequest) {
 
-        long totalAmount = getApprovedSumAmount(bill) + bill.getAmount();
+        SalesPerson salesPerson = salesPersonRepository
+                .findByFirstNameAndLastNameAndEmail(billRequest.firstName(), billRequest.lastName(), billRequest.email());
+
+        Bill bill = convertBillRequestToBill(billRequest);
+
+        long totalAmount = getApprovedSumAmount(salesPerson.getId()) + bill.getAmount();
         if (totalAmount > salesPersonLimit) {
-            bill.setStatus(false);
-            status = "REDDEDİLDİ";
-            resultMessage = "Limit aşımı nedeniyle fatura kabul edilmedi!";
-        } else {
-            bill.setStatus(true);
-            status = "ONAYLANDI";
-            resultMessage = "Fatura Kabul Edildi.";
+            UnacceptableBillException unacceptableBillException = new UnacceptableBillException("Limit aşımı nedeniyle fatura kabul edilmedi!");
+            unacceptableBillException.setBill(bill);
+            throw unacceptableBillException;
         }
+
+        bill.setStatus(true);
         billRepository.save(bill);
 
-        return new BillResponse(status, resultMessage);
+        return new BillResponse(ACCEPTED, ACCEPTED_RESULT_MESSAGE);
     }
 
-    private Long getApprovedSumAmount(Bill bill) {
-        String firstName = bill.getBillId().getFirstName();
-        String lastName = bill.getBillId().getLastName();
-        String email = bill.getBillId().getEmail();
+    private Long getApprovedSumAmount(Long salesPersonId) {
+        return billRepository.getSumAmount(salesPersonId).orElse(0L);
+    }
 
-        return billRepository.getSumAmount(firstName, lastName, email).orElse(0L);
+    private Bill convertBillRequestToBill(BillRequest billRequest) {
+
+        Bill bill = new Bill();
+        bill.setBillNo(billRequest.billNo());
+        bill.setAmount(billRequest.amount());
+        bill.setProductName(billRequest.productName());
+
+        return bill;
+
     }
 }

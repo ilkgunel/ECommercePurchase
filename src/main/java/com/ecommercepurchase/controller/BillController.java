@@ -1,5 +1,6 @@
 package com.ecommercepurchase.controller;
 
+import com.ecommercepurchase.record.BillRequest;
 import com.ecommercepurchase.record.BillResponse;
 import com.ecommercepurchase.entities.Bill;
 import com.ecommercepurchase.service.BillService;
@@ -21,8 +22,8 @@ public class BillController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<BillResponse> createBill(@RequestBody Bill bill) {
-        BillResponse billResponse = billService.addBill(bill);
+    public ResponseEntity<BillResponse> createBill(@RequestBody BillRequest billRequest) {
+        BillResponse billResponse = billService.addBill(billRequest);
 
         return new ResponseEntity<BillResponse>(billResponse, HttpStatus.CREATED);
     }

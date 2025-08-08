@@ -1,14 +1,11 @@
 package com.ecommercepurchase.entities;
 
-import com.ecommercepurchase.compositekey.BillId;
 import jakarta.persistence.*;
 
 @Entity
 public class Bill {
 
-    @EmbeddedId
-    private BillId billId;
-
+    @Id
     @Column(name = "bill_no")
     private Long billNo;
 
@@ -21,13 +18,9 @@ public class Bill {
     @Column(name = "status")
     private boolean status;
 
-    public BillId getBillId() {
-        return billId;
-    }
-
-    public void setBillId(BillId billId) {
-        this.billId = billId;
-    }
+    @ManyToOne
+    @JoinColumn(name = "bill_sales_person_id", referencedColumnName = "id")
+    private SalesPerson salesPerson;
 
     public Long getBillNo() {
         return billNo;
@@ -59,5 +52,13 @@ public class Bill {
 
     public void setStatus(boolean status) {
         this.status = status;
+    }
+
+    public SalesPerson getSalesPerson() {
+        return salesPerson;
+    }
+
+    public void setSalesPerson(SalesPerson salesPerson) {
+        this.salesPerson = salesPerson;
     }
 }
