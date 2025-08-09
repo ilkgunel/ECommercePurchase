@@ -1,6 +1,7 @@
 package com.ecommercepurchase.service;
 
 import com.ecommercepurchase.entities.Product;
+import com.ecommercepurchase.interfaces.ProductInterface;
 import com.ecommercepurchase.record.ProductRequest;
 import com.ecommercepurchase.record.ProductResponse;
 import com.ecommercepurchase.repository.ProductRepository;
@@ -14,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class ProductService {
+public class ProductService implements ProductInterface {
 
     private final ProductRepository productRepository;
 
@@ -23,12 +24,14 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
+    @Override
     @Cacheable("AllProductsInProductResponseType")
     public List<ProductResponse> getAllProductsInProductResponseType() {
         List<Product> allProducts = productRepository.findAll();
         return convertProductList(allProducts);
     }
 
+    @Override
     @Caching(evict = {@CacheEvict(value = "AllProductsInProductResponseType", allEntries = true)})
     public ProductResponse addProduct(ProductRequest productRequest) {
         Product product = new Product();

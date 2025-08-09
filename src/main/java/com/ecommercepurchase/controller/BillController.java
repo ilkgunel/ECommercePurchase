@@ -1,5 +1,6 @@
 package com.ecommercepurchase.controller;
 
+import com.ecommercepurchase.interfaces.BillInterface;
 import com.ecommercepurchase.record.BillRequest;
 import com.ecommercepurchase.record.BillResponse;
 import com.ecommercepurchase.entities.Bill;
@@ -15,15 +16,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/bill")
 public class BillController {
 
-    private final BillService billService;
+    private final BillInterface billInterface;
 
-    public BillController(BillService billService) {
-        this.billService = billService;
+    public BillController(BillInterface billInterface) {
+        this.billInterface = billInterface;
     }
 
     @PostMapping("/create")
     public ResponseEntity<BillResponse> createBill(@RequestBody BillRequest billRequest) {
-        BillResponse billResponse = billService.addBill(billRequest);
+        BillResponse billResponse = billInterface.addBill(billRequest);
 
         return new ResponseEntity<BillResponse>(billResponse, HttpStatus.CREATED);
     }

@@ -2,6 +2,7 @@ package com.ecommercepurchase.service;
 
 import com.ecommercepurchase.entities.SalesPerson;
 import com.ecommercepurchase.exception.UnacceptableBillException;
+import com.ecommercepurchase.interfaces.BillInterface;
 import com.ecommercepurchase.record.BillRequest;
 import com.ecommercepurchase.record.BillResponse;
 import com.ecommercepurchase.entities.Bill;
@@ -12,7 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
-public class BillService {
+public class BillService implements BillInterface {
 
     private final BillRepository billRepository;
     private final SalesPersonRepository salesPersonRepository;
@@ -30,6 +31,7 @@ public class BillService {
         this.salesPersonRepository = salesPersonRepository;
     }
 
+    @Override
     public BillResponse addBill(BillRequest billRequest) {
 
         SalesPerson salesPerson = salesPersonRepository
