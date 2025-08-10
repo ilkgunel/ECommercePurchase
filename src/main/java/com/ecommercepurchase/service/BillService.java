@@ -33,6 +33,14 @@ public class BillService implements BillInterface {
         this.salesPersonRepository = salesPersonRepository;
     }
 
+    /**
+     * @author ilkgunel93@gmail.com
+     * This method is being used to add a new bill record to database.
+     * If the bill amount is less than sales person's approved bill amount, this method will save is without any problem
+     * If the bill amount is less than sales person's approved bill amount, this method will throw an UnacceptableBillException
+     * @param billRequest contains the bill information which will be saved or rejected
+     * @return billResponse gives information about the bill which is accepted or rejected
+     */
     @Override
     public BillResponse addBill(BillRequest billRequest) {
 
@@ -64,7 +72,7 @@ public class BillService implements BillInterface {
     }
 
     private Long getApprovedSumAmount(Long salesPersonId) {
-        return billRepository.getSumAmount(salesPersonId).orElse(0L);
+        return billRepository.getSumAmount(salesPersonId, true).orElse(0L);
     }
 
     private Bill convertBillRequestToBill(BillRequest billRequest) {

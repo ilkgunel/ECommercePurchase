@@ -1,0 +1,199 @@
+{
+	"info": {
+		"_postman_id": "d5d87100-378c-45e2-aff5-eba5de86b954",
+		"name": "ECommerPurchase Postman Collections",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "880370"
+	},
+	"item": [
+		{
+			"name": "Bill Create Sample Request",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"billNo\":1,\n    \"amount\":200,\n    \"productName\":\"ilkay\",\n    \"billId\": {\n        \"firstName\":\"ilkay\",\n        \"lastName\":\"günel\",\n        \"email\":\"ilkgunel93@gmail.com\"\n    }\n    \n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/bill/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"bill",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Getting All Products Sample Request",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/products",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Generate Token",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\":\"michael@schumacher.com\",\n    \"password\":\"michael-schumacher\"\n\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/auth/generateToken",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"auth",
+						"generateToken"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add New Product",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtaWNoYWVsQHNjaHVtYWNoZXIuY29tIiwiaWF0IjoxNzU0NzMzNDg3LCJleHAiOjE3NTQ3Njk0ODd9.fKEYmepm3LMkd-94te5Xc8lXgQiKuIis_LSOMC8vcqg",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"productName\": \"iPhone 16 Max Pro\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/products",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List Approved Bills of Sales Person",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqb2huQGRvZS5jb20iLCJpYXQiOjE3NTQ4MzE3NjYsImV4cCI6MTc1NDg2Nzc2Nn0.v4stdhmfl3gGVNx8-L5eCidBsgtYQt23pHjYX93DgAc",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8080/bill/list/approved",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"bill",
+						"list",
+						"approved"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List Rejected Bills of Sales PErson",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqb2huQGRvZS5jb20iLCJpYXQiOjE3NTQ4NDI4NDQsImV4cCI6MTc1NDg3ODg0NH0.3rMzURM4hz4DtSKj-QRkLqgY8nYDe5UFtpMACVrDTxg",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/bill/list/rejected",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"bill",
+						"list",
+						"rejected"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

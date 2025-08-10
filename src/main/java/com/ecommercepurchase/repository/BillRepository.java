@@ -11,8 +11,8 @@ import java.util.Optional;
 @Repository
 public interface BillRepository extends JpaRepository<Bill, Long> {
 
-    @Query(value = "select SUM(b.amount) from Bill b where b.bill_sales_person_id = :salesPersonId", nativeQuery = true)
-    Optional<Long> getSumAmount(Long salesPersonId);
+    @Query(value = "select SUM(b.amount) from Bill b where b.sales_person_id = :salesPersonId and b.status = :status", nativeQuery = true)
+    Optional<Long> getSumAmount(Long salesPersonId, boolean status);
 
     List<Bill> findAllBysalesPersonIdIdAndStatus(Long billSalesPersonId, boolean status);
 }
