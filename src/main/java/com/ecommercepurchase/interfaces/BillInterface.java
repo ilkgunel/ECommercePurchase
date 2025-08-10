@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface BillInterface {
 
-    public BillResponse addBill(BillRequest billRequest);
-    public List<Bill> getRejectedBills(String userName);
+    BillResponse addBill(BillRequest billRequest);
+    List<Bill> getBillsByStatus(String userName, boolean billStatus);
 
 }

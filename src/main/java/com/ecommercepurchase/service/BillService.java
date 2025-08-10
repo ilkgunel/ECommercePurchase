@@ -57,11 +57,10 @@ public class BillService implements BillInterface {
     }
 
     @Override
-    public List<Bill> getRejectedBills(String userName) {
+    public List<Bill> getBillsByStatus(String userName, boolean status) {
         SalesPerson salesPerson = salesPersonRepository.findByEmail(userName);
-        List<Bill> rejectedBillList = billRepository.findAllBysalesPersonIdIdAndStatus(salesPerson.getId(), false);
 
-        return rejectedBillList;
+        return billRepository.findAllBysalesPersonIdIdAndStatus(salesPerson.getId(), status);
     }
 
     private Long getApprovedSumAmount(Long salesPersonId) {

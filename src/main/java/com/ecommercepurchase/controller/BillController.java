@@ -4,7 +4,6 @@ import com.ecommercepurchase.interfaces.BillInterface;
 import com.ecommercepurchase.record.BillRequest;
 import com.ecommercepurchase.record.BillResponse;
 import com.ecommercepurchase.entities.Bill;
-import com.ecommercepurchase.service.BillService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -30,10 +29,15 @@ public class BillController {
         return new ResponseEntity<BillResponse>(billResponse, HttpStatus.CREATED);
     }
 
+    @GetMapping("/list/approved")
+    public ResponseEntity<List<Bill>> getApprovedBills(@AuthenticationPrincipal UserDetails userDetails) {
+        List<Bill> approvedBills = billInterface.getBillsByStatus(userDetails.getUsername(), true);
+        return ResponseEntity.ok(approvedBills);
+    }
+
     @GetMapping("/list/rejected")
     public ResponseEntity<List<Bill>> getRejectedBills(@AuthenticationPrincipal UserDetails userDetails) {
-        List<Bill> rejectedBillList = billInterface.getRejectedBills(userDetails.getUsername());
-
+        List<Bill> rejectedBillList = billInterface.getBillsByStatus(userDetails.getUsername(), false);
         return ResponseEntity.ok(rejectedBillList);
     }
 
