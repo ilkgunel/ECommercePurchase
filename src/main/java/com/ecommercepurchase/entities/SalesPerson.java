@@ -22,7 +22,7 @@ public class SalesPerson {
     @Column(name = "email")
     private String email;
 
-    @OneToMany(mappedBy = "salesPerson")
+    @OneToMany(mappedBy = "salesPersonId")
     private List<Bill> bills;
 
     public Long getId() {

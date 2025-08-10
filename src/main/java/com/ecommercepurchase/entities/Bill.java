@@ -1,6 +1,8 @@
 package com.ecommercepurchase.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import org.hibernate.annotations.processing.Exclude;
 
 @Entity
 public class Bill {
@@ -19,8 +21,9 @@ public class Bill {
     private boolean status;
 
     @ManyToOne
-    @JoinColumn(name = "bill_sales_person_id", referencedColumnName = "id")
-    private SalesPerson salesPerson;
+    @JoinColumn(name = "salesPersonId", referencedColumnName = "id")
+    @JsonIgnore
+    private SalesPerson salesPersonId;
 
     public Long getBillNo() {
         return billNo;
@@ -54,11 +57,11 @@ public class Bill {
         this.status = status;
     }
 
-    public SalesPerson getSalesPerson() {
-        return salesPerson;
+    public SalesPerson getSalesPersonId() {
+        return salesPersonId;
     }
 
-    public void setSalesPerson(SalesPerson salesPerson) {
-        this.salesPerson = salesPerson;
+    public void setSalesPersonId(SalesPerson salesPersonId) {
+        this.salesPersonId = salesPersonId;
     }
 }

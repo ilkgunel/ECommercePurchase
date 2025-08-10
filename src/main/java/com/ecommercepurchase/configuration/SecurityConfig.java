@@ -25,8 +25,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth.requestMatchers("/auth/generateToken").permitAll())
-                .authorizeHttpRequests(auth -> auth.requestMatchers("/bill/**").authenticated())
-                .authorizeHttpRequests(auth -> auth.requestMatchers("/products/**").authenticated())
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/bill/**").hasRole("SALES_PERSON"))
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/products/**").hasRole("SALES_PERSON"))
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

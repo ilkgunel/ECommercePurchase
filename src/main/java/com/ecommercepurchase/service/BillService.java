@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class BillService implements BillInterface {
 
@@ -38,6 +40,7 @@ public class BillService implements BillInterface {
                 .findByFirstNameAndLastNameAndEmail(billRequest.firstName(), billRequest.lastName(), billRequest.email());
 
         Bill bill = convertBillRequestToBill(billRequest);
+        bill.setSalesPersonId(salesPerson);
 
         long totalAmount = getApprovedSumAmount(salesPerson.getId()) + bill.getAmount();
         if (totalAmount > salesPersonLimit) {
@@ -47,9 +50,18 @@ public class BillService implements BillInterface {
         }
 
         bill.setStatus(true);
+
         billRepository.save(bill);
 
         return new BillResponse(ACCEPTED, ACCEPTED_RESULT_MESSAGE);
+    }
+
+    @Override
+    public List<Bill> getRejectedBills(String userName) {
+        SalesPerson salesPerson = salesPersonRepository.findByEmail(userName);
+        List<Bill> rejectedBillList = billRepository.findAllBysalesPersonIdIdAndStatus(salesPerson.getId(), false);
+
+        return rejectedBillList;
     }
 
     private Long getApprovedSumAmount(Long salesPersonId) {
