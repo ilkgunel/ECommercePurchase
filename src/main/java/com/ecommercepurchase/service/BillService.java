@@ -3,6 +3,7 @@ package com.ecommercepurchase.service;
 import com.ecommercepurchase.entities.SalesPerson;
 import com.ecommercepurchase.exception.UnacceptableBillException;
 import com.ecommercepurchase.interfaces.BillInterface;
+import com.ecommercepurchase.record.BillListResponse;
 import com.ecommercepurchase.record.BillRequest;
 import com.ecommercepurchase.record.BillResponse;
 import com.ecommercepurchase.entities.Bill;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -65,10 +67,22 @@ public class BillService implements BillInterface {
     }
 
     @Override
-    public List<Bill> getBillsByStatus(String userName, boolean status) {
+    public List<BillListResponse> getBillsByStatus(String userName, boolean status) {
         SalesPerson salesPerson = salesPersonRepository.findByEmail(userName);
 
-        return billRepository.findAllBysalesPersonIdIdAndStatus(salesPerson.getId(), status);
+        List<Bill> billListByStatus = billRepository.findAllBysalesPersonIdIdAndStatus(salesPerson.getId(), status);
+
+        List<BillListResponse> billListResponses = new ArrayList<>();
+
+        billListByStatus.forEach(bill -> {
+            BillListResponse billListResponse = new BillListResponse(bill.getBillNo(), bill.getAmount(), bill.getProductName(),
+                                                                     bill.isStatus(), bill.getSalesPersonId().getId(), bill.getSalesPersonId().getFirstName(),
+                                                                     bill.getSalesPersonId().getLastName(), bill.getSalesPersonId().getEmail());
+
+            billListResponses.add(billListResponse);
+        });
+
+        return billListResponses;
     }
 
     private Long getApprovedSumAmount(Long salesPersonId) {
